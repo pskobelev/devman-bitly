@@ -3,15 +3,23 @@ from decouple import config
 from urllib.parse import urlparse
 
 
+def get_clean_url(url):
+    """Очищает урл от схемы, оставляя только адрес и путь """
+    parsed_url = urlparse(url)
+    clean_url = f"{parsed_url.netloc}{parsed_url.path}"
+    return clean_url
+
+
 def is_bitlink(headers, url):
-    parser = urlparse(url)
-    bitlink = f"{parser.netloc}{parser.path}"
+    """Проверяет что ссылка относится к сервису bitly"""
+    bitlink = get_clean_url(url)
     bitly_url = f"https://api-ssl.bitly.com/v4/bitlinks/{bitlink}"
     response = requests.get(bitly_url, headers=headers)
     return response.ok
 
 
 def shorten_link(headers, url):
+    """Сокращает длинную ссылку и возвращает короткую"""
     bitly_url = "https://api-ssl.bitly.com/v4/shorten"
     payload = {'long_url': url}
     response = requests.post(bitly_url, headers=headers, json=payload)
@@ -20,8 +28,8 @@ def shorten_link(headers, url):
 
 
 def count_clicks(header, url):
-    parser = urlparse(url)
-    bitlink = f"{parser.netloc}{parser.path}"
+    """Считает количество кликов по ссылке bit.ly"""
+    bitlink = get_clean_url(url)
     bitly_url = f"https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary"
     response = requests.get(bitly_url, headers=header)
     response.raise_for_status()
