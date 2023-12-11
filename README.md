@@ -3,6 +3,8 @@
 Простой скрипт Python для взаимодействия с Bitly API для сокращения длинных URL-адресов или получения статистики кликов
 для Bitlinks.
 
+http://loooooooooooooooooooooooooong.url >> http://short.url
+
 ### Environment
 
 Python 3.x
